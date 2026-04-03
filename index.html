@@ -1,18 +1,118 @@
 <!doctype html>
-<html>
-  <body>
-    <audio id="player" controls autoplay>
-      <source src="../audio/piano.mp3" type="audio/mpeg">
-    </audio>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audio Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
 
-    <script>
-      window.addEventListener('load', async () => {
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: #1b1b1b;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 24px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    p {
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .play-btn {
+      margin-top: 16px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Audio Player</h1>
+      <p>The audio will try to start automatically. If your browser blocks autoplay, press the button below.</p>
+
+      <audio id="player" controls autoplay>
+        <source src="audio/piano.mp3" type="audio/mpeg">
+        Your browser does not support audio playback.
+      </audio>
+
+      <button class="play-btn" id="playBtn">Play Audio</button>
+
+      <div class="note">If autoplay does not work, one click is usually required by the browser.</div>
+    </div>
+  </div>
+
+  <script>
+    const player = document.getElementById('player');
+    const playBtn = document.getElementById('playBtn');
+
+    async function tryPlay() {
+      try {
+        await player.play();
+      } catch (err) {
+        console.log('Autoplay blocked:', err);
+      }
+    }
+
+    window.addEventListener('load', tryPlay);
+
+    playBtn.addEventListener('click', async () => {
+      try {
+        await player.play();
+      } catch (err) {
+        console.log('Playback failed:', err);
+      }
+    });
+
+    document.body.addEventListener('click', async () => {
+      if (player.paused) {
         try {
-          await document.getElementById('player').play();
-        } catch (e) {
-          console.log('Autoplay blocked:', e);
+          await player.play();
+        } catch (err) {
+          console.log('Playback failed:', err);
         }
-      });
-    </script>
-  </body>
+      }
+    }, { once: true });
+  </script>
+</body>
 </html>
